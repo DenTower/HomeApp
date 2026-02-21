@@ -3,6 +3,8 @@ package com.example.homeapp.data.local
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
+
+// Интрфейс с запросами к бд
 @Dao
 interface FamilyDao {
     @Transaction

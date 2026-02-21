@@ -6,15 +6,34 @@ import com.example.homeapp.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
+// Интерфейс репозитория — контракт между ViewModel и источниками данных
+// ViewModel НЕ знает, откуда данные — из базы, сети или файла
 interface HomeRepository {
-    // Получаем список всех членов семьи с их задачами в виде Flow
+
+    // Flow — поток данных
+    // UI будет автоматически получать обновления,
+    // когда данные изменятся в базе
     fun getFamilyMembers(): Flow<List<FamilyMember>>
 
+    // Добавление члена семьи
     suspend fun addMember(name: String)
-    suspend fun removeMember(id: String)
-    suspend fun addTask(memberId: String, task: Task)
-    suspend fun removeTask(taskId: String)
-    suspend fun toggleTask(taskId: String, isDone: Boolean, completedAt: LocalDateTime?)
 
+    // Удаление члена семьи
+    suspend fun removeMember(id: String)
+
+    // Добавление задачи
+    suspend fun addTask(memberId: String, task: Task)
+
+    // Удаление задачи
+    suspend fun removeTask(taskId: String)
+
+    // Переключение статуса задачи (выполнена/не выполнена)
+    suspend fun toggleTask(
+        taskId: String,
+        isDone: Boolean,
+        completedAt: LocalDateTime?
+    )
+
+    // Получение случайного совета из интернета
     suspend fun getRandomAdvice(): Result<Advice>
 }

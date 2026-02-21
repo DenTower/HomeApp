@@ -6,6 +6,7 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 
+// глобальный контейнер состояния всего Android-приложения. Вообщем нужен чтобы всё работало
 @HiltAndroidApp
 class HomeApplication(): Application(), Configuration.Provider {
 

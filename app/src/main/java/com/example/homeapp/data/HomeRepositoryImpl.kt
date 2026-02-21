@@ -17,23 +17,39 @@ import java.time.ZoneId
 import java.util.UUID
 
 class HomeRepositoryImpl @Inject constructor(
+    // DAO — интерфейс доступа к базе данных (Room)
     private val dao: FamilyDao,
+    // API — интерфейс сетевого клиента (Retrofit)
     private val api: AdviceApi
+
 ): HomeRepository {
 
     override fun getFamilyMembers(): Flow<List<FamilyMember>> {
+
+        // dao.getMembersWithTasks() возвращает Flow из базы данных
         return dao.getMembersWithTasks().map { list ->
+
+            // Преобразуем database-модели в domain-модели
             list.map { item ->
                 FamilyMember(
                     id = item.member.id,
                     name = item.member.name,
+
+                    // Конвертируем каждую задачу из БД-формата в UI-формат
                     tasks = item.tasks.map { taskEntity ->
                         Task(
                             id = taskEntity.id,
                             title = taskEntity.title,
+
+                            // deadline хранится в БД как Long (millis)
                             deadline = millisToDateTime(taskEntity.deadline),
+
                             isDone = taskEntity.isDone,
-                            completedAt = taskEntity.completedAt?.let { millisToDateTime(it) }
+
+                            // completedAt может быть null
+                            completedAt = taskEntity.completedAt?.let {
+                                millisToDateTime(it)
+                            }
                         )
                     }
                 )
@@ -42,7 +58,14 @@ class HomeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addMember(name: String) {
-        dao.insertMember(MemberEntity(id = UUID.randomUUID().toString(), name = name))
+
+        // Вставляем запись в базу
+        dao.insertMember(
+            MemberEntity(
+                id = UUID.randomUUID().toString(),
+                name = name
+            )
+        )
     }
 
     override suspend fun removeMember(id: String) {
@@ -50,12 +73,16 @@ class HomeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addTask(memberId: String, task: Task) {
+
         dao.insertTask(
             TaskEntity(
                 id = task.id,
                 memberId = memberId,
                 title = task.title,
+
+                // сохраняем дату в миллисекундах
                 deadline = dateTimeToMillis(task.deadline),
+
                 isDone = false,
                 completedAt = null
             )
@@ -66,6 +93,7 @@ class HomeRepositoryImpl @Inject constructor(
         dao.deleteTask(taskId)
     }
 
+    // Переключение статуса задачи
     override suspend fun toggleTask(taskId: String, isDone: Boolean, completedAt: LocalDateTime?) {
         dao.updateTaskStatus(
             taskId = taskId,
@@ -75,7 +103,11 @@ class HomeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getRandomAdvice(): Result<Advice> = runCatching {
+
+        // запрос в сеть
         val response = api.fetchRandomAdvice()
+
+        // преобразуем ответ API в доменную модель
         Advice(response.slip.advice)
     }
 

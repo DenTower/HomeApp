@@ -2,6 +2,7 @@ package com.example.homeapp.data.remote
 
 import retrofit2.http.GET
 
+// интерфейс с GET запросом в сеть
 interface AdviceApi {
     @GET("advice")
     suspend fun fetchRandomAdvice(): AdviceDto
