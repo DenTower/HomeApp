@@ -51,19 +51,21 @@ class HomeRepositoryImpl @Inject constructor(
                                 millisToDateTime(it)
                             }
                         )
-                    }
+                    },
+                    homename = item.member.homename
                 )
             }
         }
     }
 
-    override suspend fun addMember(name: String) {
+    override suspend fun addMember(name: String, homename: String) {
 
         // Вставляем запись в базу
         dao.insertMember(
             MemberEntity(
                 id = UUID.randomUUID().toString(),
-                name = name
+                name = name,
+                homename = homename
             )
         )
     }

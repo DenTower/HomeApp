@@ -1,4 +1,4 @@
-package com.example.homeapp.presentation
+package com.example.homeapp.presentation.viewmodel
 
 import com.example.homeapp.domain.model.FamilyMember
 

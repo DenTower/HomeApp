@@ -1,4 +1,4 @@
-package com.example.homeapp.presentation
+package com.example.homeapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -90,9 +90,9 @@ class HomeViewModel @Inject constructor(
 
 
     // Добавить участника семьи
-    fun addMember(name: String) {
+    fun addMember(name: String, homename: String) {
         viewModelScope.launch {
-            repository.addMember(name)
+            repository.addMember(name, homename)
         }
     }
 

@@ -16,7 +16,9 @@ data class MemberEntity(
     @PrimaryKey val id: String,
 
     // имя человека
-    val name: String
+    val name: String,
+
+    val homename: String
 )
 
 @Entity(

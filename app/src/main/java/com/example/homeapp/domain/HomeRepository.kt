@@ -16,7 +16,7 @@ interface HomeRepository {
     fun getFamilyMembers(): Flow<List<FamilyMember>>
 
     // Добавление члена семьи
-    suspend fun addMember(name: String)
+    suspend fun addMember(name: String, homename: String)
 
     // Удаление члена семьи
     suspend fun removeMember(id: String)

@@ -4,6 +4,7 @@ import java.util.UUID
 
 // Модель одного члена семьи
 data class FamilyMember(
+    val homename: String,
 
     // Уникальный id генерируется автоматически
     val id: String = UUID.randomUUID().toString(),
